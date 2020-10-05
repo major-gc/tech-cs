@@ -34,7 +34,7 @@ LRU알고리즘은 `최근에 사용하지 않는 페이지를 가장 먼저 내
 `LRU알고리즘 예제`
 
 
-![A](img/os_lru.png)
+![A](imgs/os_lru.png)
 
 <<<<<<< HEAD
 * 페이지 크기가 3이라고 가정하고 0 부터 4 까지의 숫자들이 참조되는 경우를 그린 LRU 알고리즘의 상태 변화과정을 나타낸 표
@@ -51,7 +51,7 @@ LRU알고리즘은 `최근에 사용하지 않는 페이지를 가장 먼저 내
 ### 프로세스와 스레드의 차이(Process vs Thread)
 #### 프로세스
 `프로세스의 구성`
-![A](img/os_thread1.png)
+![A](imgs/os_thread1.png)
 
 
 * 프로세스 : 스레드 + 메모리공간(stack, code , data , heap)
@@ -77,7 +77,7 @@ cpu는 가상메모리를 통해 Ram주소를 들어간다.
 가상메모리는 프로세스간 주소공간을 논리적으로 차단한다.
 
 
-![A](img/os_multiprocess.png)
+![A](imgs/os_multiprocess.png)
 
 
 `T1 ,T2 == task_struct`
@@ -104,7 +104,7 @@ task_struct는 커널의 중요한 객체이며 실행중인 프로그램인 프
 
 
 
-![A](img/os_newthread.png)
+![A](imgs/os_newthread.png)
 
 
 
@@ -131,9 +131,9 @@ context switch시 캐시 레이어를 리셋해버린다.
 
 
 
-![A](img/os_io_time.png)
+![A](imgs/os_io_time.png)
 
-![A](img/os_process-thread.png)
+![A](imgs/os_process-thread.png)
 
 
 ---
@@ -181,7 +181,7 @@ context switch시 캐시 레이어를 리셋해버린다.
  Critical Section을 가진 쓰레드들의 Runnig Time이 서로 겹치지 않게 각각 단독으로 실행되게 하는 기술입니다. 다중 프로세스들의 공유 리소스에 대한 접근을 조율하기 위해 locking과 unlocking을 사용한다. 
  즉, 쉽게 말하면 뮤텍스 객체를 두 쓰레드가 동시에 사용할 수 없다는 의미입니다.    
 
-![A](img/mutex.png)
+![A](imgs/mutex.png)
   
 #### 세마포어란?(Semaphore) 
 * 공유된 자원의 데이터를 여러 프로세스가 접근하는 것을 막는 것
@@ -190,7 +190,7 @@ context switch시 캐시 레이어를 리셋해버린다.
 세마포어는 운영체제 또는 커널의 한 지정된 저장장치 내 값으로서, 각 프로세스는 이를 확인하고 변경할 수 있다. 확인되는 세마포어의 값에 따라, 그 프로세스가 즉시 자원을 사용할 수 있거나, 또는 이미 다른 프로세스에 의해 사용 중이라는 사실을 알게 되면 재시도하기 전에 일정 시간을 기다려야만 한다. 세마포어는 이진수 (0 또는 1)를 사용하거나, 또는 추가적인 값을 가질 수도 있다.   
 세마포어를 사용하는 프로세스는 그 값을 확인하고, 자원을 사용하는 동안에는 그 값을 변경함으로써 다른 세마포어 사용자들이 기다리도록 해야한다.
 
-![A](img/semaphore.png)
+![A](imgs/semaphore.png)
 
 
 ---
