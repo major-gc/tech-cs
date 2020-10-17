@@ -385,11 +385,17 @@ S = S+1 : 자원 반납을 의미하므로 자원의 개수를 증가 시킨다.
 
 #### 세그멘테이션
 
-- 페이징기법과 반대로 논리 메모리와 물리 메모리를 같은 크기가 아닌 다른 크기의 논리적 단위인 세크멘트로 분할
+- 페이징기법과 반대로 논리 메모리와 물리 메모리를 같은 크기가 아닌 다른 크기의 `논리적 단위인 세크멘트로` 분할
 - 세그먼트의 크기는 일반적으로 같지 않다.
 
+ex).우리가 한우를 잡아서 보관한다면 페이징의 경우는 모든 부위를 `같은 단위`로 잘라 보관하는 것이고<br>
+세그멘테이션 기법은 채끝,꽇등심등 부위별로 잘라 보관하는 것이다.
 
-https://m.blog.naver.com/s2kiess/220149980093
+>> 메모리를 자르는 방법을 빼고 메모리에 힐당하는 방법은 페이징 기법과 방 같다.
+
+
+![A](imgs/os_segment.png)
+
 
 
 #### 세그멘테이션 페이징 혼용 기법
@@ -574,22 +580,6 @@ cf)
     현재 진행하고 있는 Task(Process, Thread)의 상태를 저장하고 다음 진행할 Task의 상태 값을 읽어 적용하는 과정을 말합니다.
 
 
-
-
-
- ---
-
-##### 출저
-
-`메모리 관리 :`
-https://dheldh77.tistory.com/entry/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5Memory-Management-Strategy<br>
-https://velog.io/@codemcd/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9COS-12.-%EC%A3%BC%EA%B8%B0%EC%96%B5%EC%9E%A5%EC%B9%98%EA%B4%80%EB%A6%AC<br>
-`캐시의 지역성 :`
-https://k39335.tistory.com/38<br>
-`가상 메모 :`
-https://velog.io/@pa324/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B0%80%EC%83%81-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B0%9C%EB%85%90-4dk2q3ivff
-=======
-
 ---
 
 
@@ -701,6 +691,20 @@ MMU 는 세그먼트 테이블로 CPU 에서 할당한 논리 주소에 해당�
 우선 프로세스를 처음에 세그먼트 단위로 자른다. 의미 있는 단위로 나누게 되면 정보 보호와 공유를 하는 측면에서 세그먼트의 이점을 가져오면서 내부단편화를 막는다. 하지만 외부단편화가 발생할 수 있기 때문에
 잘라진 세그먼트를 다시 일정 간격인 페이지 단위로 자르는 페이징 기법을 취한다. 그래서 메모리에 적재하게 되면 페이징의 일정 단위로 다시 잘렸기 때문에 외부 단편화가 발생하지 않는다. 하지만 이와 같은 경우에는 세그먼트 테이블과 페이징 테이블 두 가지를 모두 겨쳐야하므로 속도 면에서는 조금 떨어질 수 있다.
 실제로 x86 메모리 관리를 이런 식으로 두 가지 기법을 섞어 작업을 처리한다.
+
+
+
+ ---
+
+##### 출저
+
+`메모리 관리 :`
+https://dheldh77.tistory.com/entry/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5Memory-Management-Strategy<br>
+https://velog.io/@codemcd/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9COS-12.-%EC%A3%BC%EA%B8%B0%EC%96%B5%EC%9E%A5%EC%B9%98%EA%B4%80%EB%A6%AC<br>
+`캐시의 지역성 :`
+https://k39335.tistory.com/38<br>
+`가상 메모 :`
+https://velog.io/@pa324/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C-%EA%B0%80%EC%83%81-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B0%9C%EB%85%90-4dk2q3ivff
 
 
 
