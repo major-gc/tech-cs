@@ -326,6 +326,93 @@ public class SkeletonResponse {
 프록시 패턴은 정말 많은 곳에서 사용되고 있고 응용할 곳도 많은 패턴인 듯 하니 숙지하고 있는 것이 좋은 패턴인듯 하다.
 
 ------------------------------
+### 어댑터 패턴
+
+* 한 클래스의 인터페이스를 클라이언트에서 사용하고자 하는 다른 인터페이스로 변환합니다.<br>
+어댑터를 이용하면 인터페이스 호환성 문제 때문에 같이 쓸 수 없는 클래스들을 연결해서 쓸 수 있다.
+
+![A](imgs/dp_adapter.png) 
+
+
+아래의 예시를 통해 설명해보자면.
+`어댑터 패턴 예시`
+* client에서 기존에 Math클래스를 사용하고 있음 
+* 2가지의 기능(연산)을 수행하는 `Adapter` 객체를 만들거임
+ - 수의 두배의 수를 반환 : twiceOf(Float)
+ - 수의 반(1/2)의 수를 반환 : halfOf(Float)
+ 
+ 
+`Math class`
+
+```java
+
+public class Math {
+    public static double twoTime(double num){return num*2;}
+    public static double half(double num){return num/2;}
+}
+
+```
+
+`Adapter interface`
+
+```java
+
+public interface Adapter  {
+    public Float twiceOf(Float num);
+    public Float halfOf(Float num);
+}
+
+```
+
+`Adapter interface 구현체`
+
+```java
+
+public interface AdapterImpl implements Adapter {
+    
+    @Override
+    public Float twiceOf(Float num){
+        return (float)Math.twoTime(num.doubleValue());
+    }
+    
+    @Override
+    public Float halfOf(Float num){
+        return (float)Math.half(num.doubleValue());
+    }
+}
+
+```
+
+
+`Adapter interface 구현체`
+
+```java
+
+public class Task01 {
+    public static void main(String[] args) {
+        
+        Adapter adapter = new AdapterImpl();
+        System.out.println(adapter.twiceOf(100f));
+        System.out.println(adapter.halfOf(80f));
+    }
+}
+
+```
+
+
+
+>> 결론은 기존의 클래스인 Math클래스는 건드리지지 않고 float타입으로 들어오는 값을 AdapterImpl을 통해 요구사항맞게
+double형에 변환하여 사용하였습니다.
+>> 프로젝트가 운영된지 어느 시점이 지난 상황에 새로운 요구사항이 들어왔을 경우 adapter class를 통해
+기존에 사용하는 클래스는 그대로 사용하면서 요구사항에 맞는 기능을 구현할 수 있게 도와준다.
+
+
+>> 개인적인 의견으로는 새로운 프로젝트를 개발하는 경우보다는 운영하면서 다양한 요구사항에 맞게 기능을 추가하는 경우
+많이 사용할 수 있는 패턴으로 보입니다.
+ 
+
+
+------------------------------
 ### 데코레이터 패턴
 ![A](imgs/decorator.png)
 - Target Class에 부가적인 기능을 런타임 시 다이나믹하게 부여해주기 위해 Proxy를 사용하는 패턴
@@ -365,3 +452,5 @@ Window라는 Target Class의 메서드에 Decorator의 메서드를 붙여서 �
  
 - cf) https://sabarada.tistory.com/60?category=800572
 - cf) https://sabarada.tistory.com/59
+
+
