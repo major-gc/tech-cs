@@ -506,10 +506,9 @@ double형에 변환하여 사용하였습니다.
 하지만 이런식으로 설계한다고 하면 문제점이 있습니다. 바로 기능의 추가때마다 상속구조가 복잡해진다는 것입니다
 데코레이터 패턴을 사용한다면 이러한 문제를 유연하게 대응할 수 있게됩니다. 
 ##### 데코레이터 패턴 적용 후
-![A](imgs/decorator1.png)
+![A](imgs/decorator2.png)
 - cf) https://sourcemaking.com/design_patterns/decorator
 Window라는 Target Class의 메서드에 Decorator의 메서드를 붙여서 부가기능을 추가할 수 있습니다. 
-![A](imgs/decorator2.png)
 ![A](imgs/decorator3.png)
 ![A](imgs/decorator4.png)
 ![A](imgs/decorator5.png)
