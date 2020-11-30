@@ -6,39 +6,33 @@
 * [캡슐화와 은닉화? 차이는 무엇인가?]
 * [String, StringBuilder, StringBuffer의 차이는]
 * [JAVA의 Garbage Collector는 어떻게 동작하는지.]
-
 * [자바 다이나믹 프록시]
 * [enum 이란]
 * [자바에서 == 와 Equals() 메서드의 차이는]
 * [java의 접근 제어자의 종류와 특징]
 * [Java SE와 Java EE 애플리케이션 차이]
-
 * [java의 final 키워드 (final/finally/finalize)]
 * [리플렉션이란]
 * [Wrapper class]
 * [OOP의 4가지 특징]
 추상화(Abstraction), 캡슐화(Encapsulation), 상속(Inheritance), 다형성(Polymorphism)
 * [OOP의 5대 원칙 (SOLID)]
-
 * [java의 non-static 멤버와 static 멤버의 차이]
 * [java의 main 메서드가 static인 이유]
 * [Annotation]
 * [java 직렬화(Serialization)와 역직렬화(Deserialization)란 무엇인가]
 * [JVM 구조]
-
 * [클래스, 객체, 인스턴스의 차이]
 * [객체(Object)란 무엇인가]
 * [Call by Reference와 Call by Value의 차이]
 * [제네릭에 대해 설명해주시고, 왜 쓰는지 어디세 써 봤는지 알려주세요.]
 * [CheckedException과 UnCheckedException의 차이를 설명하시오.]
-
 * [Java Collections Framework]
 java Map 인터페이스 구현체의 종류 ,java Set 인터페이스 구현체의 종류 ,java List 인터페이스 구현체의 종류
 * [HashMap vs HashTable vs ConcurrentHashMap의 차이를 설명하시오.]
 * [깊은복사 , 얇은복사의 차이]
 * [동기화와 비동기화의 차이(Syncronous vs Asyncronous)]
 * [Stream이란]
-
 * [Lambda란]
 * [자바에 함수형 인터페이스에 선언문이 하나인 이유]
 * [new String()과 ""의 차이에 대해 설명해주세요.]
@@ -638,6 +632,93 @@ https://coding-factory.tistory.com/547
 ![A](imgs/java_SOLID_DIP.PNG)  
   
 > 이렇듯 자신보다 변하기 쉬운 것에 의존하던 것을 추상화된 인터페이스나 상위클래스를 두어 변하기 쉬운 것의 변화에 영향을 받지 않게 의존 방향을 역전시켰다.
+
+
+### java의 non-static 멤버와 static 멤버의 차이
+
+* 적재되는 메모리 영역이 다르다.
+>> static 멤버 == static 영역  / non-static 멤버 == statck 영역
+* static 은 객체생성없이 바로 호출가능
+* non-static 은 객체생성을 통해 호출가능
+
+
+### java의 main 메서드가 static인 이유 
+무의식적으로 사용하는 `public static void main(String args[])`
+* static으로 선언한 main() 메서드는 프로그램 실행시 먼저 [static 영역 == method area = class area ] 영역 메모리에 적재된다.
+>> 참고로 java.lang 도 [static 영역 == method area = class area ] 영역 메모리에 적재
+* static 영역에 적재되면 객체 생성없이 바로 호출가능 == static은 객체생성없이 바로 호출가능하다.
+* main 메소드 같은 경우는 객체를 생성하지 않아도 자동으로 실행되어 작업을 수행해야하는 부분이기 때문에 static으로 선언
+* public 접근 제어자는 JVM이 main 함수가 어디에 있건 접근 가능하기 위해서
+* (String args[]) 는 매개변수로 문자열 배열을 줄 수 있음
+
+
+* [Annotation]
+Annotation는 사전적의미로는 주석이며 , 개발자가 사용하는 환경에서는
+`어노테이션이란`
+*@를 이용한 주석, 자바코드에 주석을 달아 특별한 의미를 부여한 것
+*컴파일러가 특정 오류를 억제하도록 지시하는 것과 같이 프로그램 코드의 일부가 아닌 프로그램에 관한 데이터를 제공,<br>
+코드에 정보를 추가하는 정형화된 방법.
+
+`어노테이션의 용도`
+*@Override 어노테이션처럼 컴파일러를 위한 정보를 제공하기 위한 용도
+*스프링 프레임워크의 @Controller 어노테이션처럼 런타임에 리플렉션을 이용해서 특수 기능을 추가하기 위한 용도
+*컴파일 과정에 어노테이션 정보로부터 코드를 생성하기 위한 용도
+
+`기본 어노테이션`
+example)
+*@Override: 해당 메소드가 부모 클래스에 있는 메소드를 재정의했다는 것을 명시적으로 선언
+*@Deprecated: 더이상 사용되지 않는 클래스나 메소드 앞에 추가
+*@SuppressWarnings: 프로그램에는 문제가 없는데 간혹 컴파일러가 경고를 뿜을 때가 있는데,<br>
+이를 무시하라고 프로그래머에게 알려줌
+
+`메타 어노테이션`
+* 어노테이션을 선언할때 사용한다. 프로그래머가 어노테이션을 만들때 사용하는 것이다.
+
+@Target<br>
+@Retention<br>
+@Documented: 해당 어노테이션 정보가 JavaDocs(API) 문서에 포함<br>
+@Inherited: 모든 자식 클래스가 부모 클래스의 어노테이션을 사용할 수 있다는 것을 선언<br>
+@interface: 어노테이션 선언할 때 사용<br>
+
+
+`출저`
+https://sjh836.tistory.com/8
+
+
+* [java 직렬화(Serialization)와 역직렬화(Deserialization)란 무엇인가]
+
+### JVM 구조
+
+>> JVM MEMORY영역에 Heap영역과 Native Memory영역에 jdk8에서 변화가 있다.
+
+`jdk8이전`
+![A](imgs/java_compile.png)
+
+`jdk7 vs jdk8 HEAP`
+![A](imgs/java_heap.png)
+
+* JDK 8부터 Permanent Heap 영역이 제거되고 Metaspace 영역이 추가되었다.
+* Perm은 JVM에 의해 크기가 강제되던 영역이다.(JVM이 관리하는 영)
+* Metaspace는 Native memory 영역으로, OS가 자동으로 크기를 조절한다.(OS 판단하여 메모리를 조절)
+* 기존과 비교해 Perm영역에서 사용하던 메모리를 사용할 수 있게 되어 메모리 부족에 대한 부담이 감소한다.
+
+`Perm영역의 역할은`
+* Perm 영역은 보통 Class의 Meta 정보나 Method의 Meta 정보,<br>
+Static 변수와 상수 정보들이 저장되는 공간으로 흔히 메타데이터 저장 영역이라고도 한다. 
+* 이 영역은 Java 8 부터는 Native 영역으로 이동하여 Metaspace 영역으로 변경되었다.
+* 기존 Perm 영역에 존재하던 Static Object는 Heap 영역으로 옮겨져서 GC의 대상이 최대한 될 수 있도록 하였다.
+
+
+|비고|java7|java8|
+|---|---|---|
+|Class 메타 데이터|저장|저장|
+|Method 메타 데이터|저장|저장|
+|Static Object 변수, 상수|저장|*Heap 영역으로 이동*|
+|메모리 튜닝|Heap, Perm 영역 튜닝|Heap 튜닝, *Native 영역은 OS가 동적 조정*|
+
+
+`출저`
+https://johngrib.github.io/wiki/java8-why-permgen-removed/
 
 
 ### 제네릭이란, 왜 쓰는지 어디에 써 봤는지 알려주세요
