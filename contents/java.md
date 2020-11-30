@@ -22,6 +22,7 @@
 * [Annotation]
 * [java 직렬화(Serialization)와 역직렬화(Deserialization)란 무엇인가]
 * [JVM 구조]
+* [제네릭이란, 왜 쓰는지 어디에 써 봤는지 알려주세요]
 * [클래스, 객체, 인스턴스의 차이]
 * [객체(Object)란 무엇인가]
 * [Call by Reference와 Call by Value의 차이]
@@ -633,6 +634,7 @@ https://coding-factory.tistory.com/547
   
 > 이렇듯 자신보다 변하기 쉬운 것에 의존하던 것을 추상화된 인터페이스나 상위클래스를 두어 변하기 쉬운 것의 변화에 영향을 받지 않게 의존 방향을 역전시켰다.
 
+------------------------------------------------
 
 ### java의 non-static 멤버와 static 멤버의 차이
 
@@ -641,6 +643,7 @@ https://coding-factory.tistory.com/547
 * static 은 객체생성없이 바로 호출가능
 * non-static 은 객체생성을 통해 호출가능
 
+------------------------------------------------
 
 ### java의 main 메서드가 static인 이유 
 무의식적으로 사용하는 `public static void main(String args[])`
@@ -651,8 +654,9 @@ https://coding-factory.tistory.com/547
 * public 접근 제어자는 JVM이 main 함수가 어디에 있건 접근 가능하기 위해서
 * (String args[]) 는 매개변수로 문자열 배열을 줄 수 있음
 
+------------------------------------------------
 
-* [Annotation]
+### Annotation
 Annotation는 사전적의미로는 주석이며 , 개발자가 사용하는 환경에서는
 `어노테이션이란`
 *@를 이용한 주석, 자바코드에 주석을 달아 특별한 의미를 부여한 것
@@ -684,8 +688,11 @@ example)
 `출저`
 https://sjh836.tistory.com/8
 
+------------------------------------------------
 
-* [java 직렬화(Serialization)와 역직렬화(Deserialization)란 무엇인가]
+### java 직렬화(Serialization)와 역직렬화(Deserialization)란 무엇인가
+
+------------------------------------------------
 
 ### JVM 구조
 
@@ -720,6 +727,7 @@ Static 변수와 상수 정보들이 저장되는 공간으로 흔히 메타데�
 `출저`
 https://johngrib.github.io/wiki/java8-why-permgen-removed/
 
+------------------------------------------------
 
 ### 제네릭이란, 왜 쓰는지 어디에 써 봤는지 알려주세요
 
@@ -833,7 +841,6 @@ public class Person {
 - cf) https://siyoon210.tistory.com/104
 
 ----------------------------------------------------
-### 제네릭에 대해 설명해주시고, 왜 쓰는지 어디서 써 봤는지 알려주세요.
 
 #### 제네릭(Generic)
 - 클래스 내부에서 사용할 데이터 타입을 외부에서 지정하는 기법
@@ -865,7 +872,6 @@ public class Person {
 - 제네릭타입<? super 하위타입> : 와일드카드의 범위를 특정 객체의 상위 클래스만 올 수 있다.
 
 ----------------------------------------------------
-### CheckedException과 UnCheckedException의 차이
 
 #### 예외 vs 에러
 - 예외(Exception) 

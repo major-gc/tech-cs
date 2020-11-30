@@ -1,11 +1,21 @@
 # DATABASE
 
 **:Contents**
-* [트랜잭션(Transaction) 이란](#트랜잭션이란)
+* [database pool(connection pool)](#database pool(connection pool))
+* [정규화(1차 2차 3차 BCNF)](#정규화(1차-2차-3차-BCNF))
 * [트랜잭션 격리 수준(Transaction Isolation Level)](#트랜잭션-격리-수준)
 * [트랜잭션 전파 방식(Transaction propagation)](#트랜잭션-전파-방식)
-* [Index란](#index란)
+* [트랜잭션이란](#트랜잭션이란)
 * [Index를 타지 않는 경우](#Index를-타지-않는-경우)
+* [Index의 자료구조는 / 특징은](#Index의-자료구조는-특징은)
+* [수정 삭제가 잦은 칼럼에 Index가 적합하지 않은 이유](#수정삭제가-잦은-칼럼에-Index가-적합하지-않은이유)
+* [Statement와 PrepareStatement](#Statement와-PrepareStatement)
+* [RDBMS와-NoSQL](#RDBMS와-NoSQL)
+* [샤딩](#샤딩)
+* [Replication](#Replication)
+* [파티셔닝](#파티셔닝)
+
+
 
 ---
 
