@@ -152,3 +152,151 @@ https://medium.com/@wonderful.dev/isolation-level-%EC%9D%B4%ED%95%B4%ED%95%98%EA
  	public void doSomething() { 
 		
 	}
+
+### 인덱스가 존재하지만 인덱스를 타지 않는 경우
+#### 1. 인덱스 컬럼을 변형하는 경우
+* 수식이나 함수 등으로 인덱스 컬럼 절을 변형하였을 경우  
+* 반드시 함수나 수식을 사용해야하는 경우에는 인덱스 컬럼에 적용하지 말고, 대입되는 컬럼이나 상수에 적용해야 한다.  
+
+```oracle
+SELECT column_name FROM table_name WHERE TO_CHAR(column_name, 'YYYYMMDD') = '20201204';
+> SELECT column_name FROM table_name WHERE column_name = TO_DATE('20201204', YYYYMMDD);
+```
+```oracle
+SELECT column_name FROM table_name WHERE column_name * 100 > 10000;
+> SELECT column_name FROM table_name WHERE column_name > 10000 / 100;
+```
+  
+#### 2. 내부적으로 데이터 형 변환이 일어난 경우
+* 서로 대입되는 항목끼리 데이터 타입이 다르면 내부적인 형 변환에 의해 컬럼이 함수를 사용한 것과 같은 효과를 나타낸다.
+
+```oracle
+SELECT column_name FROM table_name WHERE column_name = '20201204';
+> SELECT column_name FROM table_name WHERE column_name = TO_DATE('20201204', 'YYYYMMDD');
+```
+```oracle
+SELECT column_name FROM table_name WHERE column_name  = 100;
+> SELECT column_name FROM table_name WHERE column_name  = '100';
+```
+  
+#### 3. 조건절에 NULL 또는 NOT NULL 을 사용하는 경우
+* 기본적으로 인덱스를 구성한 컬럼 값이 전부 NULL 이라면 인덱스는 null 값을 저장하지 않음. 
+따라서 NULL 인 값이 많지 않아 인덱스를 통해 엑세스를 하고자 한다면 데이터 생성 시 디폴트로 0과 같이 데이터를 만들어주 는 것이 좋다. 
+만약, NOT NULL 이 분석 대상이라면 해당 컬럼을 NULL 허용 컬럼으로 두는 것이 좋다.  
+
+```oracle
+SELECT column_name FROM table_name WHERE column_name IS NULL;
+SELECT column_name FROM table_name WHERE column_name IS NOT NULL;
+```
+```oracle
+SELECT column_name FROM table_name WHERE column_name = '';
+SELECT column_name FROM table_name WHERE column_name >= 0;
+```
+  
+#### 4. 부정형으로 조건을 사용한 경우
+* 부정문은 인덱스를 활용하지 못한다.
+```oracle
+SELECT column_name FROM table_name WHERE column_name != 30;
+>SELECT column_name FROM table_name WHERE column_name < 30 AND column_name > 30;
+```
+또는 테이블을 한 번 더 읽어 NOT EXISTS 를 사용
+```oracle
+SELECT column_name FROM table_name WHERE NOT EXISTS
+   (SELECT column_name FROM table_name WHERE column_name = 30);
+```
+  
+#### 5. LIKE 연산자를 잘못 사용하는 경우
+* LIKE 연산자를 사용하는 경우 맨 앞에 %가 있으면 인덱스를 타지 않는다.
+```oracle
+SELECT column_name FROM table_name WHERE column_name LIKE '%S%';
+> SELECT column_name FROM table_name WHERE column_name LIKE 'S%';
+```
+가능하면 INSTR 함수 사용할 것(비교하고자 하는 값이 없으면 0반환, 있으면 시작 위치 반환)
+```oracle
+SELECT column_name  FROM table_name WHERE INSTR(column_name , 'cmp_value') > 0;
+```
+
+#### 6. OR 조건 사용
+```oracle
+SELECT * FROM table_name  WHERE column_name = 'yunseop' or name = 'song';
+> SELECT * FROM table_name  WHERE column_name = 'yunseop';
+  UNION ALL 
+  SELECT * FROM table_name  WHERE column_name = 'song';
+```
+cf)
+http://dbcafe.co.kr/wiki/index.php/%EC%98%A4%EB%9D%BC%ED%81%B4_%EC%9D%B8%EB%8D%B1%EC%8A%A4_%ED%83%80%EC%A7%80_%EC%95%8A%EB%8A%94_%EA%B2%BD%EC%9A%B0
+https://code-factory.tistory.com/24
+https://winmargo.tistory.com/61
+
+### Index 자료구조
+#### B-Tree 구조
+내부적으로는 여러 방식으로 구현하지만, 제일 보편적인 것이 B-Tree 인덱스이다.  
+storage engine 에 따라 인덱스 구조가 다른데 MySQL 의 경우에 가장 많이 사용하는 storage engine 인 InnoDB, MyISAM 같은 경우에는 B-Tree 로 되어 있고,
+Memory/Heap, NDB 등은 HASH 와 B-Tree 로 되어있다.
+![A](imgs/db_index_btree.png)  
+
+B-Tree 인덱스는 Root Block, Branch Block, Leaf Block 으로 나누어지며, 그림과 같이 Leaf block 은 양방향 링크를 가지고 있어서, 오름차순, 내림차순 검색이 가능하다.  
+  
+#### B-Tree 동작 방식
+* 1단계, 브랜치 블록의 가장 왼쪽 값이 찾고자 하는 값보다 작거나 같으면 왼쪽 포인터로 이동  
+
+* 2단계, 찾고자 하는 값이 브랜치 블록의 값 사이에 존재하면 가운데 포인터로 이동  
+
+* 3단계, 오른쪽에 있는 값보다 크면 오른쪽 포인터로 이동  
+
+![A](imgs/db_index_btree2.png)  
+예를 들어 37의 값을 찾고 싶다면??  
+* 37을 찾고자 한다면 루트블록에서  50보다 작으므로 왼쪽 포인터로 이동한다.
+
+* 37는 왼쪽 브랜치 블록의 11과 40 사이의 값이므로 가운데 포인터로 이동한다.
+
+* 이동한 결과 해당 블록이 리프블록이므로 37이 블록 내에서 존재하는지 검색한다. 
+  
+  
+
+또 예를 들어 만약 37~50의 값을 찾고 싶다면??  
+
+* 앞에서와 같이 37을 찾은다음에 정렬되어 있는 링크를 따라 50까지 검색해주면 된다.
+  
+cf)
+https://slenderankle.tistory.com/284
+
+### Index 가 수정,삭제가 많이 일어나는 테이블에 맞지 않는 이유
+인덱스는 또 다른 기존 테이블외에 인덱스 테이블을 가지고 있기때문에 사용하면 검색속도가 빨라진다.
+하지만 DML(insert, update, delete) 이 자주 일어나는 테이블의 경우에는 오히려 성능이 떨어질 수 있다.
+기본적으로 인덱스는 데이터를 삭제하더라도 사용안함 표시를 해주고 끝이지 실제로 사라지는 것이 아니다. 또한 update 문을 사용해서 
+데이터를 수정하는 경우에도 우리 눈에는 그냥 수정만 된것이지만 내부적으로는 delete 후에 다시 insert 해주는 로직을 따르고 있다.
+그렇기 때문에 DML 이 자주 일어나는 table 에서는 오히려 인덱스 테이블이 원래 테이블보다 크기가 커지는 경우가 발생하게 되고, 그렇게 되면 인덱스를 사용하는 의미가 사라진다.  
+  
+### Statement 와 PrepareStatement 의 차이
+PrepareStatement 는 Statement 를 상속받았다.  
+그리고 이 둘의 가장 큰 차이점은 캐시 사용 여부이다.  
+* 쿼리 문장 분석
+* 컴파일
+* 실행  
+Statement 를 사용하면 매번 쿼리를 수행할 때마다, 위 3단계를 거친다. 
+하지만 PrepareStatement 의 경우는 처음 한 번만 위의 단계를 거치고 그 다음에는 캐시에 담아 재사용한다.  
+  
+뚀한, PrepareStatement 는 동적인 쿼리문을 처리할 수 있다. 그래서 같은 SQL 문에서 값만 변경하여 사용한다던지, 인수가 많은 경우에 사용하기 좋다.
+Statement 는 쿼리 실행이 적을 경우 사용하면 좋을 것이고, PrepareStatement 는 쿼리 실행이 많고 동적인 쿼리문이 있을 경우 사용하면 좋을 것이다.
+  
+### RDBMS & NoSQL
+#### RDBMS  
+RDBMS는 정해져있는 데이터 스키마에 따라 데이터베이스 테이블에 저장되며, 관계를 통한 테이블간 연결을 통해 사용된다. 이 때문에 RDBMS는 데이터 관리를 효율적으로 하기위해 구조화가 굉장히 중요하다.
+  
+※스키마란?  
+데이터베이스에서 자료의 구조, 자료의 표현 방법, 자료 간의 관계를 형식 언어로 정의한 구조이다. 
+데이터베이스 관리 시스템(DBMS)이 주어진 설정에 따라 데이터베이스 스키마를 생성하며, 
+데이터베이스 사용자가 자료를 CURD 할 때, DBMS는 자신이 생성한 데이터베이스 스키마를 참조하여 명령을 수행한다.
+
+#### NoSQL
+NOSQL 은 Not Only SQL, Non relational Database 라고 부른다. 
+NOSQL은 관계형 데이터베이스와 반대되는 방식을 사용하여 스키마와 관계라는 개념이 없다. 
+RDBMS에서는 스키마에 맞추어 데이터를 관리하여야 하지만 NOSQL은 스키마가 없어 좀 더 자유롭게 데이터를 관리할 수 있다. 
+NOSQL에서 테이블과 같은 개념으로 컬렉션이라는 형태로 데이터를 관리한다.
+  
+  
+![A](imgs/db_nosql_rdbms.PNG)  
+※수직적 확장? 수평적 확장?  
+* 수직적 확장이란 기존의 서버를 더 좋은 H/W로 바꾸는 방법(scale up)  
+* 수평적 확장은 기존에 사용하던 서버 외에 서버를 추가하여 성능을 높이는 방법(scale out)
